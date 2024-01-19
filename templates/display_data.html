@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <label for="dataset">Select Dataset:</label>
+    <select name="dataset">
+        {% for dataset in datasets %}
+        <option value="{{ dataset.name }}" {% if selected_dataset and dataset.name == selected_dataset.name %}selected{% endif %}>{{ dataset.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Display">
+</form>
+
+{% if selected_dataset %}
+<canvas id="donutChart" width="400" height="400"></canvas>
+
+<script>
+    var parsedData = JSON.parse('{{ selected_dataset.data|escapejs }}');
+
+    var ctx = document.getElementById('donutChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(parsedData),
+            datasets: [{
+                data: Object.values(parsedData),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ]
+            }]
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}
