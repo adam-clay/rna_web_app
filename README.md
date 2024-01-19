@@ -1,2 +1,2 @@
 # rna_web_app
-fastapi and react page
+django page (unfinished)
